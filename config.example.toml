@@ -1,0 +1,14 @@
+# Free.ai Suite - example config (placeholders, safe to publish)
+# Salin ke config.toml dan isi nilai sebenarnya.
+
+[api]
+# Endpoint temp-mail (tempik). Bisa juga via env TEMPIK_BASE.
+tempmail_base = "http://localhost:8080/api"
+
+[router]
+# 9router lokal. Bisa juga via env NINEROUTER_URL / NINEROUTER_PASS.
+url = "http://localhost:20127"
+password = ""
+
+[general]
+headless = true
