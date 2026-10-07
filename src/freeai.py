@@ -39,8 +39,15 @@ FA_KEY_API = f"{FA_HOST}/api/v1/api-keys/"
 KEY_PREFIX = "sk-free-"
 ACCOUNTS = Path(DATA_DIR).parent / "accounts.txt"
 
-DEFAULT_PASSWORD = ""
 DEFAULT_MODEL = "qwen7b"   # self-hosted, gratis dari pool harian
+
+
+def _rand_password(n: int = 12) -> str:
+    """Password acak per akun (jangan pernah hardcode password nyata)."""
+    import random
+    import string
+    core = "".join(random.choices(string.ascii_letters + string.digits, k=n))
+    return f"Fa{core}!7"
 
 _UA = ("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
        "(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36")
@@ -108,13 +115,14 @@ def _read_code(session_id: str, email: str, timeout: int = 150) -> Optional[str]
     return None
 
 
-async def harvest_freeai(headless: bool = True, password: str = DEFAULT_PASSWORD,
+async def harvest_freeai(headless: bool = True, password: str = None,
                          timeout_verify: int = 150) -> Dict[str, Any]:
     """Buat 1 akun free.ai: signup -> verifikasi kode -> generate API key."""
     import asyncio
     from playwright.async_api import async_playwright
     from .stealth import launch_stealth_browser, create_stealth_context
 
+    password = password or _rand_password()
     out: Dict[str, Any] = {"site": "freeai", "ok": False, "base_url": FA_BASE}
     tc = TempikClient()
     email = tc.create_inbox()
